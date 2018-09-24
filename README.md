@@ -12,7 +12,7 @@ This library contains a Tensorflow implementation of MolGAN: An implicit generat
 
 ## Structure
 * [data](https://github.com/nicola-decao/MolGAN/tree/master/data): should contain your datasets. If you run `download_dataset.sh` the script will download the dataset used for the paper.
-* [example](https://github.com/nicola-decao/MolGAN/blob/master/example.py): Example code for using the library within a Tensorflow project. **NOTE: these are NOT the experiments on the paper!**.
+* [example](https://github.com/nicola-decao/MolGAN/blob/master/example.py): Example code for using the library within a Tensorflow project. **NOTE: these are NOT the experiments on the paper!**
 * [models](https://github.com/nicola-decao/MolGAN/tree/master/models): Class for Models. Both VAE and (W)GAN are implemented.
 * [optimizers](https://github.com/nicola-decao/MolGAN/tree/master/optimizers): Class for Optimizers for both VAE, (W)GAN and RL.
 
