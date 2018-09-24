@@ -1,27 +1,23 @@
 # MolGAN
 Tensorflow implementation of MolGAN: An implicit generative model for small molecular graphs (https://arxiv.org/abs/1805.11973)
 
-
-
-
-
 ## Overview
-This library contains a Tensorflow implementation of MolGAN: An implicit generative model for small molecular graphs as presented inb[[1]](#citation)(https://arxiv.org/abs/1805.11973).
+This library contains a Tensorflow implementation of MolGAN: An implicit generative model for small molecular graphs as presented in [[1]](#citation)(https://arxiv.org/abs/1805.11973).
 ## Dependencies
 
 * **python>=3.6**
 * **tensorflow>=1.7.0**: https://tensorflow.org
-* **rdkit**: https://www.rdkit.org/
+* **rdkit**: https://www.rdkit.org
 * **numpy**
 
 ## Structure
 * [data](https://github.com/nicola-decao/MolGAN/tree/master/data): should contain your datasets. If you run `download_dataset.sh` the script will download the dataset used for the paper.
-* [examples](https://github.com/nicola-decao/MolGAN/tree/master/examples): Example code for using the library within a Tensorflow project. **Disclaimer: there are the experiments for the paper**.
-* [models](https://github.com/nicola-decao/MolGAN/tree/master/hyperspherical_vae/models): 
-* [optimizers](https://github.com/nicola-decao/MolGAN/tree/master/optimizers):
+* [example](https://github.com/nicola-decao/MolGAN/blob/master/example.py): Example code for using the library within a Tensorflow project. **Disclaimer: there are NOT the experiments for the paper**.
+* [models](https://github.com/nicola-decao/MolGAN/tree/master/models): Class for Models. Both VAE and (W)GAN are implemented.
+* [optimizers](https://github.com/nicola-decao/MolGAN/tree/master/optimizers): Class for Optimizers for both VAE, (W)GAN and RL.
 
 ## Usage
-Please have a look into the [examples folder](https://github.com/nicola-decao/MolGAN/tree/master/examples).
+Please have a look into at the [example](https://github.com/nicola-decao/MolGAN/blob/master/example.py).
 
 Please cite [[1](#citation)] in your work when using this library in your experiments.
 
