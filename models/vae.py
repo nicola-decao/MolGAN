@@ -10,7 +10,7 @@ class GraphVAEModel:
     def __init__(self, vertexes, edges, nodes, features, embedding_dim, encoder_units, decoder_units, variational,
                  encoder, decoder, soft_gumbel_softmax=False, hard_gumbel_softmax=False, with_features=True):
         self.vertexes, self.nodes, self.edges, self.embedding_dim, self.encoder, self.decoder = \
-            vertexes, edges, nodes, embedding_dim, encoder, decoder
+            vertexes, nodes, edges, embedding_dim, encoder, decoder
 
         self.training = tf.placeholder_with_default(False, shape=())
         self.variational = tf.placeholder_with_default(variational, shape=())
