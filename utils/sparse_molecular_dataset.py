@@ -52,15 +52,42 @@ class SparseMolecularDataset():
         self._generate_encoders_decoders()
         self._generate_AX()
 
+        # it contains the all the molecules stored as rdkit.Chem objects
         self.data = np.array(self.data)
+
+        # it contains the all the molecules stored as SMILES strings
         self.smiles = np.array(self.smiles)
+
+        # a (N, L) matrix where N is the length of the dataset and each L-dim vector contains the 
+        # indices corresponding to a SMILE sequences with padding wrt the max length of the longest 
+        # SMILES sequence in the dataset (see self._genS)
         self.data_S = np.stack(self.data_S)
+
+        # a (N, 9, 9) tensor where N is the length of the dataset and each 9x9 matrix contains the 
+        # indices of the positions of the ones in the one-hot representation of the adjacency tensor
+        (see self._genA)
         self.data_A = np.stack(self.data_A)
+
+        # a (N, 9) matrix where N is the length of the dataset and each 9-dim vector contains the 
+        # indices of the positions of the ones in the one-hot representation of the annotation matrix
+        # (see self._genX)
         self.data_X = np.stack(self.data_X)
+
+        # a (N, 9) matrix where N is the length of the dataset and each  9-dim vector contains the 
+        # diagonal of the correspondent adjacency matrix
         self.data_D = np.stack(self.data_D)
+
+        # a (N, F) matrix where N is the length of the dataset and each F vector contains features 
+        # of the correspondent molecule (see self._genF)
         self.data_F = np.stack(self.data_F)
+
+        # a (N, 9) matrix where N is the length of the dataset and each  9-dim vector contains the
+        # eigenvalues of the correspondent Laplacian matrix
         self.data_Le = np.stack(self.data_Le)
-        self.data_Lv = np.stack(self.data_Lv)
+
+        # a (N, 9, 9) matrix where N is the length of the dataset and each  9x9 matrix contains the 
+        # eigenvectors of the correspondent Laplacian matrix
+        self.data_Lv = np.stack(self.data_Lv) 
 
         self.vertexes = self.data_F.shape[-2]
         self.features = self.data_F.shape[-1]
