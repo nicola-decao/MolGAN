@@ -21,7 +21,7 @@ def graph_aggregation_layer(inputs, units, training, activation=None, dropout_ra
     i = tf.layers.dense(inputs, units=units, activation=tf.nn.sigmoid)
     j = tf.layers.dense(inputs, units=units, activation=activation)
     output = tf.reduce_sum(i * j, 1)
-    output = activation(output) if activation is not None else activation
+    output = activation(output) if activation is not None else output
     output = tf.layers.dropout(output, dropout_rate, training=training)
 
     return output
