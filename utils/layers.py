@@ -11,7 +11,7 @@ def graph_convolution_layer(inputs, units, training, activation=None, dropout_ra
 
     output = tf.matmul(adj, output)
     output = tf.reduce_sum(output, 1) + tf.layers.dense(inputs=annotations, units=units)
-    output = activation(output) if activation is not None else activation
+    output = activation(output) if activation is not None else output
     output = tf.layers.dropout(output, dropout_rate, training=training)
 
     return output
