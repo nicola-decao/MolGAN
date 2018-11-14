@@ -65,7 +65,7 @@ class SparseMolecularDataset():
 
         # a (N, 9, 9) tensor where N is the length of the dataset and each 9x9 matrix contains the 
         # indices of the positions of the ones in the one-hot representation of the adjacency tensor
-        (see self._genA)
+        # (see self._genA)
         self.data_A = np.stack(self.data_A)
 
         # a (N, 9) matrix where N is the length of the dataset and each 9-dim vector contains the 
