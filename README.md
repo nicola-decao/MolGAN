@@ -9,15 +9,16 @@ This library contains a Tensorflow implementation of MolGAN: An implicit generat
 * **tensorflow>=1.7.0**: https://tensorflow.org
 * **rdkit**: https://www.rdkit.org
 * **numpy**
+* **scikit-learn**
 
 ## Structure
-* [data](https://github.com/nicola-decao/MolGAN/tree/master/data): should contain your datasets. If you run `download_dataset.sh` the script will download the dataset used for the paper (then you should run `utils/sparse_molecular_dataset.py` to conver the dataset in a graph format used by MolGAN models).
+* [data](https://github.com/nicola-decao/MolGAN/tree/master/data): should contain your datasets. If you run `download_dataset.sh` the script will download the dataset used for the paper (then you should run `utils/sparse_molecular_dataset.py` to convert the dataset in a graph format used by MolGAN models).
 * [example](https://github.com/nicola-decao/MolGAN/blob/master/example.py): Example code for using the library within a Tensorflow project. **NOTE: these are NOT the experiments on the paper!**
 * [models](https://github.com/nicola-decao/MolGAN/tree/master/models): Class for Models. Both VAE and (W)GAN are implemented.
 * [optimizers](https://github.com/nicola-decao/MolGAN/tree/master/optimizers): Class for Optimizers for both VAE, (W)GAN and RL.
 
 ## Usage
-Please have a look into at the [example](https://github.com/nicola-decao/MolGAN/blob/master/example.py).
+Please have a look at the [example](https://github.com/nicola-decao/MolGAN/blob/master/example.py).
 
 Please cite [[1](#citation)] in your work when using this library in your experiments.
 
