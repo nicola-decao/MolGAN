@@ -234,6 +234,7 @@ class SparseMolecularDataset():
                               *[a.GetImplicitValence() == i for i in range(9)],
                               a.GetIsAromatic(),
                               a.GetNoImplicit(),
+                              a.GetFormalCharge(),
                               *[a.GetNumExplicitHs() == i for i in range(5)],
                               *[a.GetNumImplicitHs() == i for i in range(5)],
                               *[a.GetNumRadicalElectrons() == i for i in range(5)],

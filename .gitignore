@@ -107,6 +107,10 @@ venv.bak/
 data/
 *.sdf
 
+# results
+results/
+
 # pycharm stuff
 .idea/
 *.xml
+

@@ -14,27 +14,22 @@ class Trainer:
 
     def __init__(self, model, optimizer, session):
         self.model, self.optimizer, self.session, self.print = model, optimizer, session, defaultdict(list)
+        self.writer = tf.compat.v1.summary.FileWriter('./results/logs', graph=self.session.graph)
 
     @staticmethod
     def log(msg='', date=True):
         print(str(datetime.now().strftime('%Y-%m-%d %H:%M:%S')) + ' ' + str(msg) if date else str(msg))
 
     def save(self, directory):
-        saver = tf.train.Saver()
-
-        dirs = directory.split('/')
-        dirs = ['/'.join(dirs[:i]) for i in range(1, len(dirs) + 1)]
-        mkdirs = [d for d in dirs if not os.path.exists(d)]
-
-        for d in mkdirs:
-            os.makedirs(d)
-
+        if not os.path.exists(directory):
+            os.makedirs(directory)
+        saver = tf.compat.v1.train.Saver()
         saver.save(self.session, '{}/{}.ckpt'.format(directory, 'model'))
         pickle.dump(self.print, open('{}/{}.pkl'.format(directory, 'trainer'), 'wb'))
         self.log('Model saved in {}!'.format(directory))
 
     def load(self, directory):
-        saver = tf.train.Saver()
+        saver = tf.compat.v1.train.Saver()
         saver.restore(self.session, '{}/{}.ckpt'.format(directory, 'model'))
         self.print = pickle.load(open('{}/{}.pkl'.format(directory, 'trainer'), 'rb'))
         self.log('Model loaded from {}!'.format(directory))
@@ -45,10 +40,8 @@ class Trainer:
               test_fetch_dict, test_feed_dict,
               _train_step=None, _eval_step=None, _test_step=None,
               _train_update=None, _eval_update=None, _test_update=None,
-              eval_batch=None, test_batch=None,
-              best_fn=None, min_epochs=None, look_ahead=None,
-              save_every=None, directory=None,
-              skip_first_eval=False):
+              eval_batch=None, best_fn=None, min_epochs=None, look_ahead=None,
+              save_every=None, directory=None, skip_first_eval=False):
 
         if _train_step is None:
             def _train_step(step, steps, epoch, epochs, min_epochs, model, optimizer, batch_dim):
@@ -141,6 +134,9 @@ class Trainer:
 
                 result = _eval_step(epoch, epochs, min_epochs, self.model, self.optimizer, batch_dim, eval_batch,
                                     start_time, last_epoch_start_time, _eval_update)
+
+                for k in result.keys():
+                    self.writer.add_summary(tf.Summary(value=[tf.Summary.Value(tag=k, simple_value=result[k])]), epoch)
 
                 if best_fn is not None and (True if best_model_value is None else best_fn(result) > best_model_value):
                     self.save(directory)

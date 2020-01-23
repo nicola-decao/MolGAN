@@ -9,7 +9,7 @@ from models import encoder_rgcn, decoder_adj
 
 from optimizers.vae import GraphVAEOptimizer
 
-outputdir = '/home/endogena/Documents/Internal/IT/Code/ml/MolGAN/results/VAE/test'
+outputdir = '/home/endogena/Documents/Internal/IT/Code/ml/MolGAN/results/models'
 
 batch_dim = 128
 la = 0.75
@@ -18,9 +18,8 @@ n_critic = 5
 metric = 'validity,sas'
 n_samples = 1000
 z_dim = 8
-epochs = 10
-save_every = None
-
+epochs = 5
+save_every = epochs // 2
 
 # load dataset
 data = SparseMolecularDataset()
