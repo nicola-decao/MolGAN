@@ -83,8 +83,8 @@ class Trainer:
                     output = {k: np.mean(v) for k, v in output.items()}
                 else:
                     output = self.session.run(eval_fetch_dict(epoch, epochs, min_epochs, model, optimizer),
-                                              feed_dict=eval_feed_dict(epoch, epochs, min_epochs, model,
-                                                                       optimizer, batch_dim))
+                                              feed_dict=eval_feed_dict(epoch, epochs, min_epochs, model, optimizer,
+                                                                       batch_dim))
 
                 if _eval_update is not None:
                     output.update(_eval_update(epoch, epochs, min_epochs, model, optimizer, batch_dim, eval_batch))
