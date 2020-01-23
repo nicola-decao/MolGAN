@@ -15,11 +15,11 @@ batch_dim = 128
 la = 0.75
 dropout = 0
 n_critic = 5
-metric = 'validity,sas'
+metric = 'validity,qed'
 n_samples = 1000
 z_dim = 8
-epochs = 5
-save_every = epochs // 2
+epochs = 50
+save_every = n_critic
 
 # load dataset
 data = SparseMolecularDataset()
