@@ -12,9 +12,30 @@ from datetime import datetime
 
 
 class SparseMolecularDataset():
+    def __init__(self):
+        self.__len = None
+        self.data = None
+        self.data_A = None
+        self.data_D = None
+        self.data_F = None
+        self.data_Le = None
+        self.data_Lv = None
+        self.data_S = None
+        self.data_X = None
+        self.features = None
+        self.smiles = None
+        self.test_count = None
+        self.test_counter = None
+        self.test_idx = None
+        self.train_count = None
+        self.train_counter = None
+        self.train_idx = None
+        self.validation_count = None
+        self.validation_counter = None
+        self.validation_idx = None
+        self.vertexes = None
 
     def load(self, filename, subset=1):
-
         with open(filename, 'rb') as f:
             self.__dict__.update(pickle.load(f))
 
@@ -87,7 +108,7 @@ class SparseMolecularDataset():
 
         # a (N, 9, 9) matrix where N is the length of the dataset and each  9x9 matrix contains the 
         # eigenvectors of the correspondent Laplacian matrix
-        self.data_Lv = np.stack(self.data_Lv) 
+        self.data_Lv = np.stack(self.data_Lv)
 
         self.vertexes = self.data_F.shape[-2]
         self.features = self.data_F.shape[-1]
@@ -126,69 +147,68 @@ class SparseMolecularDataset():
         self.log('Creating features and adjacency matrices..')
         pr = ProgressBar(60, len(self.data))
 
-        data = []
+        data_ax = []
         smiles = []
-        data_S = []
-        data_A = []
-        data_X = []
-        data_D = []
-        data_F = []
-        data_Le = []
-        data_Lv = []
+        data_s = []
+        data_a = []
+        data_x = []
+        data_d = []
+        data_f = []
+        data_le = []
+        data_lv = []
 
         max_length = max(mol.GetNumAtoms() for mol in self.data)
         max_length_s = max(len(Chem.MolToSmiles(mol)) for mol in self.data)
 
         for i, mol in enumerate(self.data):
-            A = self._genA(mol, connected=True, max_length=max_length)
-            D = np.count_nonzero(A, -1)
-            if A is not None:
-                data.append(mol)
+            a = self._genA(mol, connected=True, max_length=max_length)
+            d = np.count_nonzero(a, -1)
+            if a is not None:
+                data_ax.append(mol)
                 smiles.append(Chem.MolToSmiles(mol))
-                data_S.append(self._genS(mol, max_length=max_length_s))
-                data_A.append(A)
-                data_X.append(self._genX(mol, max_length=max_length))
-                data_D.append(D)
-                data_F.append(self._genF(mol, max_length=max_length))
+                data_s.append(self._genS(mol, max_length=max_length_s))
+                data_a.append(a)
+                data_x.append(self._genX(mol, max_length=max_length))
+                data_d.append(d)
+                data_f.append(self._genF(mol, max_length=max_length))
 
-                L = D - A
-                Le, Lv = np.linalg.eigh(L)
+                le, lv = np.linalg.eigh(d - a)
 
-                data_Le.append(Le)
-                data_Lv.append(Lv)
+                data_le.append(le)
+                data_lv.append(lv)
 
             pr.update(i + 1)
 
         self.log(date=False)
-        self.log('Created {} features and adjacency matrices  out of {} molecules!'.format(len(data),
+        self.log('Created {} features and adjacency matrices  out of {} molecules!'.format(len(data_ax),
                                                                                            len(self.data)))
 
-        self.data = data
+        self.data = data_ax
         self.smiles = smiles
-        self.data_S = data_S
-        self.data_A = data_A
-        self.data_X = data_X
-        self.data_D = data_D
-        self.data_F = data_F
-        self.data_Le = data_Le
-        self.data_Lv = data_Lv
+        self.data_S = data_s
+        self.data_A = data_a
+        self.data_X = data_x
+        self.data_D = data_d
+        self.data_F = data_f
+        self.data_Le = data_le
+        self.data_Lv = data_lv
         self.__len = len(self.data)
 
     def _genA(self, mol, connected=True, max_length=None):
 
         max_length = max_length if max_length is not None else mol.GetNumAtoms()
 
-        A = np.zeros(shape=(max_length, max_length), dtype=np.int32)
+        a = np.zeros(shape=(max_length, max_length), dtype=np.int32)
 
         begin, end = [b.GetBeginAtomIdx() for b in mol.GetBonds()], [b.GetEndAtomIdx() for b in mol.GetBonds()]
         bond_type = [self.bond_encoder_m[b.GetBondType()] for b in mol.GetBonds()]
 
-        A[begin, end] = bond_type
-        A[end, begin] = bond_type
+        a[begin, end] = bond_type
+        a[end, begin] = bond_type
 
-        degree = np.sum(A[:mol.GetNumAtoms(), :mol.GetNumAtoms()], axis=-1)
+        degree = np.sum(a[:mol.GetNumAtoms(), :mol.GetNumAtoms()], axis=-1)
 
-        return A if connected and (degree > 0).all() else None
+        return a if connected and (degree > 0).all() else None
 
     def _genX(self, mol, max_length=None):
 

@@ -29,6 +29,7 @@ def graph_aggregation_layer(inputs, units, training, activation=None, dropout_ra
 
 def multi_dense_layers(inputs, units, training, activation=None, dropout_rate=0.):
     hidden_tensor = inputs
+    print(units)
     for u in units:
         hidden_tensor = tf.layers.dense(hidden_tensor, units=u, activation=activation)
         hidden_tensor = tf.layers.dropout(hidden_tensor, dropout_rate, training=training)

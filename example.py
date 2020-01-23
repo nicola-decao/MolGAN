@@ -5,20 +5,27 @@ from utils.trainer import Trainer
 from utils.utils import *
 
 from models.gan import GraphGANModel
-from models import encoder_rgcn, decoder_adj, decoder_dot, decoder_rnn
+from models.vae import GraphVAEModel
+from models import encoder_rgcn, decoder_adj
 
 from optimizers.gan import GraphGANOptimizer
+from optimizers.vae import GraphVAEOptimizer
+
+modeltype = 'VAE'  # GAN or VAE
+outputdir = '/home/endogena/Documents/Internal/IT/Code/ml/MolGAN/results/%s/test' % modeltype
 
 batch_dim = 128
-la = 1
+la = 0.75
 dropout = 0
 n_critic = 5
 metric = 'validity,sas'
-n_samples = 5000
+n_samples = 1000
 z_dim = 8
-epochs = 10
+epochs = 2
 save_every = None
 
+
+# load dataset
 data = SparseMolecularDataset()
 data.load('data/gdb9_9nodes.sparsedataset')
 
@@ -174,21 +181,41 @@ def _test_update(model, optimizer, batch_dim, test_batch):
     return m0
 
 
-# model
-model = GraphGANModel(data.vertexes,
-                      data.bond_num_types,
-                      data.atom_num_types,
-                      z_dim,
-                      decoder_units=(128, 256, 512),
-                      discriminator_units=((128, 64), 128, (128, 64)),
-                      decoder=decoder_adj,
-                      discriminator=encoder_rgcn,
-                      soft_gumbel_softmax=False,
-                      hard_gumbel_softmax=False,
-                      batch_discriminator=False)
+if modeltype == 'GAN':
+    # model
+    model = GraphGANModel(vertexes=data.vertexes,
+                          edges=data.bond_num_types,
+                          nodes=data.atom_num_types,
+                          embedding_dim=z_dim,
+                          decoder_units=(128, 256, 512),
+                          discriminator_units=((128, 64), 128, (128, 64)),
+                          decoder=decoder_adj,
+                          discriminator=encoder_rgcn,
+                          soft_gumbel_softmax=False,
+                          hard_gumbel_softmax=False,
+                          batch_discriminator=False)
 
-# optimizer
-optimizer = GraphGANOptimizer(model, learning_rate=1e-3, feature_matching=False)
+    # optimizer
+    optimizer = GraphGANOptimizer(model, learning_rate=1e-3, feature_matching=False)
+
+# else:
+#     # model
+#     model = GraphVAEModel(vertexes=data.vertexes,
+#                           edges=data.bond_num_types,
+#                           nodes=data.atom_num_types,
+#                           features=data.features,
+#                           embedding_dim=z_dim,
+#                           encoder_units=((128, 64), 128, (128, 64)),
+#                           decoder_units=((128, 64), 128, (128, 64)),
+#                           variational=True,
+#                           encoder=encoder_rgcn,
+#                           decoder=decoder_adj,
+#                           soft_gumbel_softmax=False,
+#                           hard_gumbel_softmax=False,
+#                           with_features=True)
+#
+#     # optimizer
+#     optimizer = GraphVAEOptimizer(model, learning_rate=1e-3)
 
 # session
 session = tf.Session()
@@ -209,6 +236,6 @@ trainer.train(batch_dim=batch_dim,
               test_fetch_dict=test_fetch_dict,
               test_feed_dict=test_feed_dict,
               save_every=save_every,
-              directory='', # here users need to first create and then specify a folder where to save the model
+              directory=outputdir,
               _eval_update=_eval_update,
               _test_update=_test_update)
