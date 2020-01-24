@@ -101,17 +101,13 @@ class MolecularMetrics(object):
     def natural_product_scores(mols, norm=False):
 
         # calculating the score
-        scores = [sum(NP_model.get(bit, 0)
-                      for bit in Chem.rdMolDescriptors.GetMorganFingerprint(mol,
-                                                                            2).GetNonzeroElements()) / float(
+        scores = [sum(NP_model.get(bit, 0) for bit in Chem.rdMolDescriptors.GetMorganFingerprint(mol, 2).GetNonzeroElements()) / float(
             mol.GetNumAtoms()) if mol is not None else None
                   for mol in mols]
 
         # preventing score explosion for exotic molecules
-        scores = list(map(lambda score: score if score is None else (
-            4 + math.log10(score - 4 + 1) if score > 4 else (
+        scores = list(map(lambda score: score if score is None else (4 + math.log10(score - 4 + 1) if score > 4 else (
                 -4 - math.log10(-4 - score + 1) if score < -4 else score)), scores))
-
         scores = np.array(list(map(lambda x: -4 if x is None else x, scores)))
         scores = np.clip(MolecularMetrics.remap(scores, -3, 1), 0.0, 1.0) if norm else scores
 

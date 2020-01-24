@@ -5,14 +5,11 @@ from utils.trainer import Trainer
 from utils.utils import *
 
 from models.gan import GraphGANModel
-from models.vae import GraphVAEModel
 from models import encoder_rgcn, decoder_adj
 
 from optimizers.gan import GraphGANOptimizer
-from optimizers.vae import GraphVAEOptimizer
 
-outputdir = '/home/endogena/Documents/Internal/IT/Code/ml/MolGAN/results/GAN/test'
-
+runname = 'gan-test'
 batch_dim = 128
 la = 0.75
 dropout = 0
@@ -201,7 +198,7 @@ session = tf.Session()
 session.run(tf.global_variables_initializer())
 
 # trainer
-trainer = Trainer(model, optimizer, session)
+trainer = Trainer(model, optimizer, session, runname)
 
 print('Parameters: {}'.format(np.sum([np.prod(e.shape) for e in session.run(tf.trainable_variables())])))
 
@@ -215,6 +212,5 @@ trainer.train(batch_dim=batch_dim,
               test_fetch_dict=test_fetch_dict,
               test_feed_dict=test_feed_dict,
               save_every=save_every,
-              directory=outputdir,
               _eval_update=_eval_update,
               _test_update=_test_update)

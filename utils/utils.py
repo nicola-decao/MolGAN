@@ -68,7 +68,7 @@ def reconstructions(data, model, session, batch_dim=10, sample=False):
     return mols
 
 
-def samples(data, model, session, embeddings, sample=False):
+def samples(data, model, session, embeddings, sample=False, smiles=False):
     n, e = session.run([model.nodes_gumbel_argmax, model.edges_gumbel_argmax] if sample else [
         model.nodes_argmax, model.edges_argmax], feed_dict={
         model.embeddings: embeddings, model.training: False})
@@ -76,7 +76,10 @@ def samples(data, model, session, embeddings, sample=False):
 
     mols = [data.matrices2mol(n_, e_, strict=True) for n_, e_ in zip(n, e)]
 
-    return mols
+    if smiles:
+        return [Chem.MolToSmiles(m, isomericSmiles=True, kekuleSmiles=True) for m in mols if m]
+    else:
+        return mols
 
 
 def all_scores(mols, data, norm=False, reconstruction=False):
