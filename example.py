@@ -17,7 +17,7 @@ metric = 'validity,sas'
 n_samples = 5000
 z_dim = 8
 epochs = 10
-save_every = None
+save_every = 1 # May lead to errors if left as None
 
 data = SparseMolecularDataset()
 data.load('data/gdb9_9nodes.sparsedataset')
