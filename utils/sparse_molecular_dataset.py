@@ -151,7 +151,7 @@ class SparseMolecularDataset():
                 data_D.append(D)
                 data_F.append(self._genF(mol, max_length=max_length))
 
-                L = D.diag() - A
+                L = np.diag(D) - A
                 Le, Lv = np.linalg.eigh(L)
 
                 data_Le.append(Le)
