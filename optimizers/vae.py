@@ -32,8 +32,6 @@ class GraphVAEOptimizer(object):
 
         self.loss_RL = - model.value_logits_fake
 
-        self.loss_RL = - model.value_logits_fake
-
         self.loss_VAE = tf.cond(model.variational,
                                 lambda: self.reconstruction_loss + self.kl_weight * self.kl,
                                 lambda: self.reconstruction_loss)
