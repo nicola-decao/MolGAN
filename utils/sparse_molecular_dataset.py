@@ -224,6 +224,15 @@ class SparseMolecularDataset():
 
     def matrices2mol(self, node_labels, edge_labels, strict=False):
         mol = Chem.RWMol()
+        
+        val_atoms=node_labels!=0
+        
+        if val_atoms.shape[0]==0:
+            return None
+
+        node_labels=node_labels[val_atoms]
+        edge_labels=edge_labels[val_atoms,:]
+        edge_labels=edge_labels[:, val_atoms]
 
         for node_label in node_labels:
             mol.AddAtom(Chem.Atom(self.atom_decoder_m[node_label]))
